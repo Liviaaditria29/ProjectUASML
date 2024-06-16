@@ -1,29 +1,30 @@
+import streamlit as st
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
 
-# Load data
+# Load the CSV file
 df = pd.read_csv('euro2024_players.csv')
 
-# Inspect data types
-print(df.dtypes)
+# Set the page title
+st.set_page_config(page_title="Euro 2024 Players")
 
-# Encode label target
-le = LabelEncoder()
-df['Country'] = le.fit_transform(df['Country'])
-y = df['Country']
+# Display the title
+st.title("Euro 2024 Players")
 
-# Drop unnecessary columns
-X = df.drop('Country', axis=1)
+# Display the data as a table
+st.dataframe(df)
 
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Allow users to filter the data
+st.sidebar.title("Filter Players")
+position = st.sidebar.multiselect("Select Position", df['Position'].unique())
+country = st.sidebar.multiselect("Select Country", df['Country'].unique())
 
-# Build Random Forest Classifier model
-rf = RandomForestClassifier(n_estimators=100, random_state=42)
-rf.fit(X_train, y_train)
+# Filter the data based on user selections
+filtered_df = df
+if position:
+    filtered_df = filtered_df[filtered_df['Position'].isin(position)]
+if country:
+    filtered_df = filtered_df[filtered_df['Country'].isin(country)]
 
-# Evaluate model
-score = rf.score(X_test, y_test)
-print("Accuracy:", score)
+# Display the filtered data
+st.subheader("Filtered Players")
+st.dataframe(filtered_df)
