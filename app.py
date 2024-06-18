@@ -17,10 +17,8 @@ y = df['Country']
 X = df.drop('Country', axis=1)
 
 # Ensure there are no missing values in the features
-if X.isnull().sum().sum() > 0:
-    # Fill NaN values with mean for numeric columns
-    numeric_cols = X.select_dtypes(include=np.number).columns
-    X[numeric_cols] = X[numeric_cols].fillna(X[numeric_cols].mean())
+if X.isnull().values.any():
+    X = X.fillna(X.mean())
 
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -29,7 +27,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 rf = RandomForestClassifier(n_estimators=100, random_state=42)
 
 # Ensure no NaN values in X_train and y_train
-if np.any(np.isnan(X_train)) or np.any(np.isnan(y_train)):
+if X_train.isnull().values.any() or y_train.isnull().values.any():
     raise ValueError("NaN values found in X_train or y_train. Please handle missing values.")
 
 # Fit model
