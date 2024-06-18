@@ -1,30 +1,34 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.express as px
+import sklearn
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
 
-# Load the CSV file
-df = pd.read_csv('euro2024_players.csv')
+# Load the notebook file
+with open('Prediksi_pemain_euro_2024_dengan_randomfores_.ipynb', 'r') as f:
+    notebook_content = f.read()
 
-# Set the page title
-st.set_page_config(page_title="Euro 2024 Players")
+# Display the notebook contents in Streamlit
+st.title("Prediksi Pemain Euro 2024 dengan Random Forest")
+st.markdown(notebook_content)
 
-# Display the title
-st.title("Euro 2024 Players")
+# Add any additional functionality or interactivity here
+@st.cache
+def load_data():
+    df = pd.read_csv('euro2024_players.csv')
+    return df
 
-# Display the data as a table
-st.dataframe(df)
+df = load_data()
 
-# Allow users to filter the data
-st.sidebar.title("Filter Players")
-position = st.sidebar.multiselect("Select Position", df['Position'].unique())
-country = st.sidebar.multiselect("Select Country", df['Country'].unique())
+st.subheader("Data Preview")
+st.write(df.sample(10))
 
-# Filter the data based on user selections
-filtered_df = df
-if position:
-    filtered_df = filtered_df[filtered_df['Position'].isin(position)]
-if country:
-    filtered_df = filtered_df[filtered_df['Country'].isin(country)]
+# Add any other interactive components, visualizations, or analysis here
 
-# Display the filtered data
-st.subheader("Filtered Players")
-st.dataframe(filtered_df)
+if __name__ == '__main__':
+    st.run()
