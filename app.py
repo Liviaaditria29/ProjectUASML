@@ -4,29 +4,43 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
-import sklearn
-from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
 
-# Load the data
+# Load data
 df = pd.read_csv('euro2024_players.csv')
 
-# Define the Streamlit app
-def app():
-    st.title("Euro 2024 Player Prediction")
+# Sidebar
+st.sidebar.title("Exploratory Analysis")
+analysis_type = st.sidebar.selectbox("Select Analysis Type", ["Overview", "Position Distribution", "Age Distribution", "Market Value Distribution"])
 
-    # Display the data
-    st.subheader("Player Data")
+if analysis_type == "Overview":
+    st.title("Euro 2024 Players Overview")
     st.dataframe(df)
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Country Distribution")
+        country_counts = df['Country'].value_counts()
+        st.bar_chart(country_counts)
+    with col2:
+        st.subheader("Position Distribution")
+        position_counts = df['Position'].value_counts()
+        st.bar_chart(position_counts)
 
-    # Exploratory data analysis
-    st.subheader("Exploratory Data Analysis")
-    st.write("Visualize the player data here")
+elif analysis_type == "Position Distribution":
+    st.title("Position Distribution")
+    fig, ax = plt.figure(), plt.figure().subplots()
+    sns.countplot(x='Position', data=df, ax=ax)
+    plt.xticks(rotation=90)
+    st.pyplot(fig)
 
-    # Model training and evaluation
-    st.subheader("Model Training and Evaluation")
-    st.write("Implement the Random Forest Classifier here")
+elif analysis_type == "Age Distribution":
+    st.title("Age Distribution")
+    fig, ax = plt.figure(), plt.figure().subplots()
+    sns.histplot(df['Age'], bins=20, ax=ax)
+    st.pyplot(fig)
 
-if __name__ == "__main__":
-    app()
+elif analysis_type == "Market Value Distribution":
+    st.title("Market Value Distribution")
+    fig, ax = plt.figure(), plt.figure().subplots()
+    sns.histplot(df['MarketValue'], bins=20, ax=ax)
+    st.pyplot(fig)
