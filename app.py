@@ -3,15 +3,24 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
+import os
+
+# Pastikan path file CSV yang benar
+csv_file = 'euro2024_players.csv'
+
+# Periksa apakah file ada
+if not os.path.exists(csv_file):
+    raise FileNotFoundError(f"File '{csv_file}' not found. Please check the file path.")
 
 # Load data
-df = pd.read_csv('your_dataset.csv')
+try:
+    df = pd.read_csv(csv_file)
+except Exception as e:
+    print(f"Error loading '{csv_file}': {e}")
+    raise
 
 # Inspect data types
 print("Data Types:\n", df.dtypes)
-
-# Check for missing values
-print("Missing Values:\n", df.isnull().sum())
 
 # Encode label target
 le = LabelEncoder()
@@ -20,10 +29,6 @@ y = df['Country']
 
 # Drop unnecessary columns
 X = df.drop('Country', axis=1)
-
-# Ensure there are no missing values in the features
-if X.isnull().sum().sum() > 0:
-    X = X.fillna(X.mean())
 
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
