@@ -9,7 +9,12 @@ st.set_page_config(page_title="UEFA Euro 2024 Players")
 
 # Display the data
 st.title("UEFA Euro 2024 Players")
-st.dataframe(df)
+
+try:
+    st.dataframe(df)
+except Exception as e:
+    st.write("An error occurred while displaying the data:")
+    st.write(str(e))
 
 # Sidebar filters
 st.sidebar.title("Filters")
