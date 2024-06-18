@@ -1,20 +1,20 @@
 import streamlit as st
 import pandas as pd
+import os
+
+# Get the current working directory
+cwd = os.getcwd()
+print(f"Current working directory: {cwd}")
 
 # Load the data
-df = pd.read_csv('/kaggle/input/uefa-euro-2024-players/euro2024_players.csv')
+df = pd.read_csv('euro2024_players.csv')
 
 # Set the page title
 st.set_page_config(page_title="UEFA Euro 2024 Players")
 
 # Display the data
 st.title("UEFA Euro 2024 Players")
-
-try:
-    st.dataframe(df)
-except Exception as e:
-    st.write("An error occurred while displaying the data:")
-    st.write(str(e))
+st.dataframe(df)
 
 # Sidebar filters
 st.sidebar.title("Filters")
