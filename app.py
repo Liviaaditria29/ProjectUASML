@@ -18,7 +18,9 @@ X = df.drop('Country', axis=1)
 
 # Ensure there are no missing values in the features
 if X.isnull().sum().sum() > 0:
-    X = X.fillna(X.mean())
+    # Fill NaN values with mean for numeric columns
+    numeric_cols = X.select_dtypes(include=np.number).columns
+    X[numeric_cols] = X[numeric_cols].fillna(X[numeric_cols].mean())
 
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
